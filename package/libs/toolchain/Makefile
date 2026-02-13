@@ -7,6 +7,7 @@
 # Entware specific: locales package moved to rtndev, gconv-modules package added
 
 include $(TOPDIR)/rules.mk
+
 PKG_NAME:=toolchain
 PKG_RELEASE:=12
 
