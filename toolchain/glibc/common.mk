@@ -73,8 +73,8 @@ GLIBC_CONFIGURE:= \
 		  $(if $(CONFIG_PKG_CC_STACKPROTECTOR_STRONG),--enable-stack-protector=strong) \
 		  $(if $(CONFIG_PKG_CC_STACKPROTECTOR_ALL),--enable-stack-protector=all) \
 		  $(if $(CONFIG_PKG_RELRO_FULL),--enable-bind-now) \
-		  $(if $(or $(CONFIG_GLIBC_USE_VERSION_2_23),\
-			    $(CONFIG_GLIBC_USE_VERSION_2_27)),--enable-obsolete-rpc) \
+		  $(if $(CONFIG_GLIBC_USE_VERSION_2_23),--enable-obsolete-rpc) \
+		  $(if $(CONFIG_GLIBC_USE_VERSION_2_27),--enable-obsolete-rpc) \
 		  $(if $(CONFIG_GLIBC_USE_VERSION_2_27),--enable-obsolete-nsl) \
 		  $(if $(CONFIG_PKG_FORTIFY_SOURCE_1),--enable-fortify-source=1) \
 		  $(if $(CONFIG_PKG_FORTIFY_SOURCE_2),--enable-fortify-source=2) \
