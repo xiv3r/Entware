@@ -35,14 +35,14 @@ define Package/terminfo
   SECTION:=libs
   CATEGORY:=Libraries
   TITLE:=Terminal Info Database (ncurses)
-  URL:=http://www.gnu.org/software/ncurses/
+  URL:=https://www.gnu.org/software/ncurses/
 endef
 
 define Package/libncursesw
   SECTION:=libs
   CATEGORY:=Libraries
   TITLE:=Terminal handling library (Unicode)
-  URL:=http://www.gnu.org/software/ncurses/
+  URL:=https://www.gnu.org/software/ncurses/
   DEPENDS:= +terminfo
   ABI_VERSION:=6
 endef
@@ -51,7 +51,7 @@ define Package/libncurses
   SECTION:=libs
   CATEGORY:=Libraries
   TITLE:=Terminal handling library
-  URL:=http://www.gnu.org/software/ncurses/
+  URL:=https://www.gnu.org/software/ncurses/
   DEPENDS:= +libncursesw
   ABI_VERSION:=6
 endef
@@ -60,7 +60,7 @@ define Package/libncurses-dev
   SECTION:=devel
   CATEGORY:=Development
   SUBMENU:=Libraries
-  DEPENDS:=+zlib +libncurses
+  DEPENDS:=zlib
   TITLE:=Development files for the ncurses library
 endef
 
@@ -69,14 +69,14 @@ define Package/ncurses-bin
   CATEGORY:=Utilities
   SUBMENU:=Terminal
   TITLE:=Terminal-related programs
-  URL:=http://www.gnu.org/software/ncurses/
+  URL:=https://www.gnu.org/software/ncurses/
   DEPENDS:=+libncursesw
   ALTERNATIVES:= \
 		300:/opt/bin/clear:/opt/bin/clear-ncurses \
 		300:/opt/bin/reset:/opt/bin/reset-ncurses
 endef
 
-TARGET_CFLAGS += $(FPIC)
+TARGET_CFLAGS += $(FPIC) -std=gnu17
 
 CONFIGURE_ARGS += \
 	--enable-echo \
