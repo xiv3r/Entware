@@ -144,6 +144,8 @@ define Host/Install
 	$(LN) lua5.1 $(STAGING_DIR_HOSTPKG)/bin/lua
 	$(LN) luac5.1 $(STAGING_DIR_HOSTPKG)/bin/luac
 	$(LN) lua5.1.pc $(STAGING_DIR_HOSTPKG)/lib/pkgconfig/lua.pc
+	$(SED) 's,^prefix=.*,prefix= $(STAGING_DIR_HOSTPKG),' \
+		$(STAGING_DIR_HOSTPKG)/lib/pkgconfig/lua5.1.pc
 endef
 
 define Build/InstallDev
