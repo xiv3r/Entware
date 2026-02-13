@@ -35,6 +35,7 @@ define Package/wireguard-tools
   MAINTAINER:=Jason A. Donenfeld <Jason@zx2c4.com>
   TITLE:=WireGuard userspace control program (wg)
   DEPENDS:= \
+	  @!LINUX_2_6_36 \
 	  +!BUSYBOX_CONFIG_IP:ip \
 	  +!BUSYBOX_CONFIG_FEATURE_IP_LINK:ip
 endef
