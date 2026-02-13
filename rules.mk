@@ -215,7 +215,7 @@ LIBGCC_A=$(lastword $(wildcard $(TOOLCHAIN_DIR)/lib/gcc/*/*/libgcc.a))
 LIBGCC_S=$(if $(wildcard $(TOOLCHAIN_DIR)/lib/libgcc_s.so),-L$(TOOLCHAIN_DIR)/lib -lgcc_s,$(LIBGCC_A))
 endif
 
-ifeq  ($(LIBC),glibc)
+ifeq ($(LIBC),glibc)
   ifeq ($(ARCH),aarch64)
     DYNLINKER=ld-linux-aarch64.so.1
   endif
@@ -249,8 +249,8 @@ ifndef DUMP
     TARGET_CROSS:=$(if $(TARGET_CROSS),$(TARGET_CROSS),$(OPTIMIZE_FOR_CPU)-openwrt-linux$(if $(TARGET_SUFFIX),-$(TARGET_SUFFIX))-)
     TOOLCHAIN_ROOT_DIR:=$(TOPDIR)/staging_dir/$(TOOLCHAIN_DIR_NAME)
     TOOLCHAIN_BIN_DIRS:=$(TOOLCHAIN_ROOT_DIR)/bin
-    TOOLCHAIN_INC_DIRS:=$(TOOLCHAIN_ROOT_DIR)/usr/include $(TOOLCHAIN_ROOT_DIR)/include
-    TOOLCHAIN_LIB_DIRS:=$(TOOLCHAIN_ROOT_DIR)/usr/lib $(TOOLCHAIN_ROOT_DIR)/lib
+    TOOLCHAIN_INC_DIRS:=$(TOOLCHAIN_ROOT_DIR)/include
+    TOOLCHAIN_LIB_DIRS:=$(TOOLCHAIN_ROOT_DIR)/lib
     TARGET_CFLAGS+= -fhonour-copts
     ifeq ($(CONFIG_USE_MUSL),y)
       TOOLCHAIN_INC_DIRS+= $(TOOLCHAIN_DIR)/include/fortify
