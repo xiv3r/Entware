@@ -11,7 +11,7 @@
  #define DEFAULT_STACK_SIZE 0x8000
 --- a/bfd/elfnn-aarch64.c
 +++ b/bfd/elfnn-aarch64.c
-@@ -2356,7 +2356,7 @@ elfNN_aarch64_reloc_name_lookup (bfd *ab
+@@ -2362,7 +2362,7 @@ elfNN_aarch64_reloc_name_lookup (bfd *ab
  
  /* The name of the dynamic interpreter.  This is put in the .interp
     section.  */
@@ -22,7 +22,7 @@
    (((1 << 25) - 1) << 2)
 --- a/bfd/elfxx-mips.c
 +++ b/bfd/elfxx-mips.c
-@@ -986,7 +986,7 @@ static bfd *reldyn_sorting_bfd;
+@@ -984,7 +984,7 @@ static bfd *reldyn_sorting_bfd;
  #define ELF_DYNAMIC_INTERPRETER(abfd)		\
     (ABI_N32_P (abfd) ? "/usr/lib32/libc.so.1"	\
      : ABI_64_P (abfd) ? "/usr/lib64/libc.so.1"	\

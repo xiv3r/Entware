@@ -1,6 +1,6 @@
 --- a/ld/genscripts.sh
 +++ b/ld/genscripts.sh
-@@ -195,29 +195,6 @@ append_to_lib_path()
+@@ -210,29 +210,6 @@ append_to_lib_path()
  	lib="=${lib}"
        fi
        skip_lib=no
@@ -30,7 +30,7 @@
        if test "${skip_lib}" = "no"; then
  	case :${lib_path1}:${lib_path2}: in
  	  *:${lib}:*) ;;
-@@ -229,42 +206,6 @@ append_to_lib_path()
+@@ -244,42 +221,6 @@ append_to_lib_path()
    fi
  }
  
@@ -75,7 +75,7 @@
    *) LIB_PATH=${lib_path1}:${lib_path2} ;;
 --- a/ld/ldelf.c
 +++ b/ld/ldelf.c
-@@ -939,12 +939,12 @@ ldelf_check_ld_so_conf (const struct bfd
+@@ -943,12 +943,12 @@ ldelf_check_ld_so_conf (const struct bfd
  
        info.path = NULL;
        info.len = info.alloc = 0;
