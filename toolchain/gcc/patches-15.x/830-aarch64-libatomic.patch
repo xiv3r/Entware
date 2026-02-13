@@ -12,7 +12,7 @@ Signed-off-by: Konstantin Demin <rockdrilla@gmail.com>
 
 --- a/libatomic/Makefile.am
 +++ b/libatomic/Makefile.am
-@@ -130,7 +130,6 @@ libatomic_la_LIBADD = $(foreach s,$(SIZE
+@@ -128,7 +128,6 @@ libatomic_la_LIBADD = $(foreach s,$(SIZE
  ## On a target-specific basis, include alternates to be selected by IFUNC.
  if HAVE_IFUNC
  if ARCH_AARCH64_LINUX
