@@ -10,13 +10,13 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=ppp
-PKG_RELEASE:=2b
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/paulusmack/ppp
 PKG_SOURCE_DATE:=2020-10-03
 PKG_SOURCE_VERSION:=ad3937a0a38a696eb1a37dbf8f92e8e6072cdccb
-PKG_MIRROR_HASH:=e49a4e44026a161c37c85242dc98670b267fc51acf39a0029300b6e3393cf9d4
+PKG_MIRROR_HASH:=3dea3f91f97374fa7ef0b380c09ec60717db87b72e7fb3fb5342d94ff7afd72c
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 PKG_LICENSE:=BSD-4-Clause
 PKG_CPE_ID:=cpe:/a:point-to-point_protocol_project:point-to-point_protocol
