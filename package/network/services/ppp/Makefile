@@ -5,7 +5,6 @@
 # See /LICENSE for more information.
 #
 # Entware specific. We keep this version. New versions are for Kernels > 4.2
-#
 
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
@@ -20,7 +19,7 @@ PKG_SOURCE_VERSION:=ad3937a0a38a696eb1a37dbf8f92e8e6072cdccb
 PKG_MIRROR_HASH:=e49a4e44026a161c37c85242dc98670b267fc51acf39a0029300b6e3393cf9d4
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 PKG_LICENSE:=BSD-4-Clause
-PKG_CPE_ID:=cpe:/a:samba:ppp
+PKG_CPE_ID:=cpe:/a:point-to-point_protocol_project:point-to-point_protocol
 
 PKG_RELEASE_VERSION:=2.4.8
 PKG_VERSION:=$(PKG_RELEASE_VERSION)_git$(subst -,,$(PKG_SOURCE_DATE))
