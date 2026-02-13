@@ -3,6 +3,9 @@
 # Copyright (C) 2006-2013 OpenWrt.org
 #
 
+# Entware specifics: keep version (kernels are too old)
+# header (uapi/)linux/ila.h since Linux 4.3
+
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libnl
@@ -27,7 +30,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/libnl/default
   SECTION:=libs
   CATEGORY:=Libraries
-  URL:=http://www.infradead.org/~tgr/libnl/
+  URL:=https://www.infradead.org/~tgr/libnl/
   ABI_VERSION:=200
 endef
 
