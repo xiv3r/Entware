@@ -21,7 +21,7 @@ define Package/Default
   PROVIDES:=
   EXTRA_DEPENDS:=
   MAINTAINER:=$(PKG_MAINTAINER)
-  SOURCE:=$(patsubst $(TOPDIR)/%,%,$(patsubst $(TOPDIR)/package/%,feeds/base/%,$(CURDIR)))
+  SOURCE:=$(patsubst $(TOPDIR)/%,%,$(if $(__pkg_source_makefile),$(__pkg_source_makefile),$(CURDIR)))
 # Entware spesific - NO -r before $(PKG_RELEASE)
   ifneq ($(PKG_VERSION),)
     ifneq ($(PKG_RELEASE),)
