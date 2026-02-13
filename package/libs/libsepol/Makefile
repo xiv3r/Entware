@@ -6,12 +6,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libsepol
-PKG_VERSION:=3.8.1
+PKG_VERSION:=3.9
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/SELinuxProject/selinux/releases/download/$(PKG_VERSION)
-PKG_HASH:=0e78705305f955abd4c0654d37a5477ee26349ab74db9e2b03a7868897ae1ddf
+PKG_HASH:=ba630b59e50c5fbf9e9dd45eb3734f373cf78d689d8c10c537114c9bd769fa2e
 
 PKG_MAINTAINER:=Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 PKG_CPE_ID:=cpe:/a:selinuxproject:libsepol
@@ -25,7 +25,7 @@ define Package/libsepol
   SECTION:=libs
   CATEGORY:=Libraries
   TITLE:=SELinux binary policy manipulation library
-  URL:=http://selinuxproject.org/page/Main_Page
+  URL:=https://github.com/selinuxproject
 endef
 
 define Package/libsepol/description
@@ -38,7 +38,7 @@ define Package/chkcon
   CATEGORY:=Utilities
   DEPENDS:=+libsepol
   TITLE:=libsepol chkcon security context validation tool
-  URL:=http://selinuxproject.org/page/Main_Page
+  URL:=https://github.com/selinuxproject
 endef
 
 define Package/chkcon/description
@@ -62,16 +62,17 @@ define Build/Install
 	$(call Build/Install/Default,install)
 endef
 
-define Build/InstallDev
-	$(INSTALL_DIR) $(1)/opt/include
-	$(CP) $(PKG_INSTALL_DIR)/opt/include/* $(1)/opt/include/
-	$(INSTALL_DIR) $(1)/opt/lib
-	$(CP) $(PKG_INSTALL_DIR)/opt/lib/* $(1)/opt/lib/
-	$(INSTALL_DIR) $(1)/opt/lib/pkgconfig
-	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/opt/lib/pkgconfig/libsepol.pc $(1)/opt/lib/pkgconfig/
-	$(SED) 's,/opt/include,$$$${prefix}/include,g' $(1)/opt/lib/pkgconfig/libsepol.pc
-	$(SED) 's,/opt/lib,$$$${exec_prefix}/lib,g' $(1)/opt/lib/pkgconfig/libsepol.pc
-endef
+# XXX disable
+#define Build/InstallDev
+#	$(INSTALL_DIR) $(1)/opt/include
+#	$(CP) $(PKG_INSTALL_DIR)/opt/include/* $(1)/opt/include/
+#	$(INSTALL_DIR) $(1)/opt/lib
+#	$(CP) $(PKG_INSTALL_DIR)/opt/lib/* $(1)/opt/lib/
+#	$(INSTALL_DIR) $(1)/opt/lib/pkgconfig
+#	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/opt/lib/pkgconfig/libsepol.pc $(1)/opt/lib/pkgconfig/
+#	$(SED) 's,/opt/include,$$$${prefix}/include,g' $(1)/opt/lib/pkgconfig/libsepol.pc
+#	$(SED) 's,/opt/lib,$$$${exec_prefix}/lib,g' $(1)/opt/lib/pkgconfig/libsepol.pc
+#endef
 
 define Package/libsepol/install
 	$(INSTALL_DIR) $(1)/opt/lib
