@@ -2,13 +2,13 @@
 #
 # Copyright (C) 2006-2021 OpenWrt.org
 #
-# Entware specific: postinst/prerm; no jsonfilter as deps; no configs
+# Entware specific: postinst/prerm; no jsonfilter as deps; no configs;
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=busybox
 PKG_VERSION:=1.37.0
-PKG_RELEASE:=4
+PKG_RELEASE:=6
 PKG_FLAGS:=essential
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
@@ -49,8 +49,8 @@ define Package/busybox/Default
   CATEGORY:=Base system
   MAINTAINER:=Felix Fietkau <nbd@nbd.name>
   TITLE:=Core utilities for embedded Linux
-  URL:=http://busybox.net/
-  DEPENDS:=+BUSYBOX_CONFIG_PAM:libpam #+BUSYBOX_CONFIG_NTPD:jsonfilter +(USE_GLIBC&&BUSYBOX_CONFIG_FEATURE_MOUNT_NFS)||(USE_GLIBC&&BUSYBOX_CONFIG_FEATURE_INETD_RPC):libtirpc
+  URL:=https://busybox.net/
+  DEPENDS:= +BUSYBOX_CONFIG_PAM:libpam #+USE_GLIBC:libcrypt-compat +BUSYBOX_CONFIG_NTPD:jsonfilter +(USE_GLIBC&&BUSYBOX_CONFIG_FEATURE_MOUNT_NFS)||(USE_GLIBC&&BUSYBOX_CONFIG_FEATURE_INETD_RPC):libtirpc
   USERID:=ntp=123:ntp=123
 endef
 
@@ -58,6 +58,7 @@ define Package/busybox
   $(call Package/busybox/Default)
   CONFLICTS:=busybox-selinux
   VARIANT:=default
+  DEFAULT_VARIANT:=1
 endef
 
 define Package/busybox-selinux
@@ -155,6 +156,8 @@ define Package/busybox/install
 	$(FIND) $(PKG_INSTALL_DIR) -lname "*" | sed "s|$(PKG_INSTALL_DIR)/opt/||g" > $(1)/opt/share/busybox_applets.lst.dist
 endef
 
+Package/busybox-selinux/install = $(Package/busybox/install)
+
 # The postinst & prerm scripts will work only when busybox has readlink applet.
 # We cannot use readlink directly, it is not yet installed and use 'busybox readlink' instead.
 # We convert /opt/bin/busybox to canonical form because /opt is a symlink in some Entware installs
@@ -207,7 +210,13 @@ for file in /opt/sbin/*; do
 done
 endef
 
-Package/busybox-selinux/install = $(Package/busybox/install)
+define Package/busybox/preinst
+#!/opt/bin/busybox sh
+
+/opt/bin/busybox ln -snf busybox /opt/bin/[
+/opt/bin/busybox ln -snf busybox /opt/bin/basename
+/opt/bin/busybox ln -snf busybox /opt/bin/sh
+endef
 
 $(eval $(call BuildPackage,busybox))
 $(eval $(call BuildPackage,busybox-selinux))
