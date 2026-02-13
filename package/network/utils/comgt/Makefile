@@ -35,7 +35,7 @@ define Package/comgt
 $(call Package/comgt/Default)
   TITLE:=Option/Vodafone 3G/GPRS control tool
   DEPENDS:=+chat
-  URL:=http://manpages.ubuntu.com/manpages/trusty/man1/comgt.1.html
+  URL:=https://manpages.ubuntu.com/manpages/trusty/man1/comgt.1.html
 endef
 
 define Package/comgt-directip
@@ -80,17 +80,25 @@ define Package/comgt/install
 	$(INSTALL_DATA) ./files/getcnum.gcom $(1)/opt/etc/gcom/getcnum.gcom
 	$(INSTALL_DATA) ./files/getimsi.gcom $(1)/opt/etc/gcom/getimsi.gcom
 	$(INSTALL_DATA) ./files/runcommand.gcom $(1)/opt/etc/gcom/runcommand.gcom
+#	$(INSTALL_DIR) $(1)/etc/hotplug.d/tty
+#	$(INSTALL_CONF) ./files/3g.usb $(1)/etc/hotplug.d/tty/30-3g
+#	$(INSTALL_DIR) $(1)/lib/netifd/proto
+#	$(INSTALL_BIN) ./files/3g.sh $(1)/lib/netifd/proto/3g.sh
 endef
 
 define Package/comgt-directip/install
 	$(INSTALL_DIR) $(1)/opt/etc/gcom
 	$(INSTALL_DATA) ./files/directip.gcom $(1)/opt/etc/gcom/directip.gcom
 	$(INSTALL_DATA) ./files/directip-stop.gcom $(1)/opt/etc/gcom/directip-stop.gcom
+#	$(INSTALL_DIR) $(1)/lib/netifd/proto
+#	$(INSTALL_BIN) ./files/directip.sh $(1)/lib/netifd/proto/directip.sh
 endef
 
 define Package/comgt-ncm/install
 	$(INSTALL_DIR) $(1)/opt/etc/gcom
 	$(INSTALL_DATA) ./files/ncm.json $(1)/opt/etc/gcom/ncm.json
+#	$(INSTALL_DIR) $(1)/lib/netifd/proto
+#	$(INSTALL_BIN) ./files/ncm.sh $(1)/lib/netifd/proto/ncm.sh
 endef
 
 $(eval $(call BuildPackage,comgt))
