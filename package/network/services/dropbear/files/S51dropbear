@@ -2,10 +2,11 @@
 
 PATH=/opt/bin:/opt/sbin:/sbin:/bin:/usr/sbin:/usr/bin
 
-PIDFILE="/opt/var/run/dropbear.pid"
 DROPBEAR="/opt/sbin/dropbear"
 
 . /opt/etc/config/dropbear.conf
+
+PIDFILE="${PIDFILE:-/opt/var/run/dropbear.pid}"
 
 dropbear_status ()
 {
