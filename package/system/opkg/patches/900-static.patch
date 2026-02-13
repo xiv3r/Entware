@@ -10,7 +10,7 @@
  OPTION(ENABLE_USIGN "Enable usign support" ON)
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -2,12 +2,18 @@ cmake_minimum_required(VERSION 2.6)
+@@ -2,12 +2,18 @@ cmake_minimum_required(VERSION 3.10)
  
  PROJECT(opkg-cl C)
  
@@ -30,13 +30,15 @@
  	FIND_LIBRARY(ubox NAMES libubox.a)
  ELSE()
  	FIND_LIBRARY(ubox NAMES ubox)
-@@ -19,6 +25,9 @@ TARGET_LINK_LIBRARIES(opkg-cl opkg bb ${
- CHECK_LIBRARY_EXISTS(pthread pthread_create "" NEED_PTHREAD)
- IF(NEED_PTHREAD)
- 	TARGET_LINK_LIBRARIES(opkg-cl pthread)
-+	IF(STATIC)
-+		TARGET_LINK_LIBRARIES(opkg-cl c gcc_pic)
-+	ENDIF()
+@@ -16,9 +22,8 @@ ENDIF()
+ ADD_EXECUTABLE(opkg-cl opkg-cl.c)
+ TARGET_LINK_LIBRARIES(opkg-cl opkg bb ${ubox})
+ 
+-CHECK_LIBRARY_EXISTS(pthread pthread_create "" NEED_PTHREAD)
+-IF(NEED_PTHREAD)
+-	TARGET_LINK_LIBRARIES(opkg-cl pthread)
++IF(STATIC)
++	TARGET_LINK_LIBRARIES(opkg-cl pthread c gcc_pic)
  ENDIF()
  
  INSTALL(TARGETS opkg-cl RUNTIME DESTINATION bin)
