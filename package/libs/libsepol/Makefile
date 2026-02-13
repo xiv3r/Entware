@@ -62,7 +62,7 @@ define Build/Install
 	$(call Build/Install/Default,install)
 endef
 
-# XXX disable
+# XXX skip
 #define Build/InstallDev
 #	$(INSTALL_DIR) $(1)/opt/include
 #	$(CP) $(PKG_INSTALL_DIR)/opt/include/* $(1)/opt/include/
