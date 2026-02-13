@@ -108,6 +108,7 @@ menu "Global build settings"
 	config CLEAN_IPKG
 		bool
 		prompt "Remove ipkg/opkg status data files in final images"
+		depends on !USE_APK
 		help
 		  This removes all ipkg/opkg status data files from the target directory
 		  before building the root filesystem.
@@ -176,7 +177,7 @@ menu "Global build settings"
 # Entware specifics: GCC-8.x
 	config MOLD
 		depends on (aarch64 || arm || i386 || i686 || loongarch64 || m68k || powerpc || powerpc64 || riscv64 || sh4 || x86_64)
-		depends on !(GCC_USE_VERSION_8 || GCC_USE_VERSION_11)
+		depends on !GCC_USE_VERSION_8
 		depends on !HOST_OS_MACOS
 		def_bool $(shell, ./config/check-hostcxx.sh 10 2 12)
 
@@ -252,6 +253,15 @@ menu "Global build settings"
 
 	comment "Hardening build options"
 
+	config PKG_FANALYZER
+		bool
+		prompt "Enable gcc fanalyzer"
+		default n
+		help
+		  Add -fanalyzer to the CFLAGS. As a result of this option, a static analysis
+		  of the program flow is conducted, allowing interprocedural paths to be
+		  identified and warnings to be issued if problems are identified.
+
 	config PKG_CHECK_FORMAT_SECURITY
 		bool
 		prompt "Enable gcc format-security"
@@ -291,52 +301,52 @@ menu "Global build settings"
 			  PIE is activated for all applications
 	endchoice
 
-# Entware specific -> no STACKPROTECTOR
-#	choice
-#		prompt "User space Stack-Smashing Protection"
-#		default PKG_CC_STACKPROTECTOR_REGULAR
-#		help
-#		  Enable GCC Stack Smashing Protection (SSP) for userspace applications
-#		config PKG_CC_STACKPROTECTOR_NONE
-#			bool "None"
-#			help
-#				No stack smashing protection.
-#		config PKG_CC_STACKPROTECTOR_REGULAR
-#			bool "Regular"
-#			help
-#				Protects functions with vulnerable objects.
-#				This includes functions with buffers larger than 8 bytes or calls to alloca.
-#		config PKG_CC_STACKPROTECTOR_STRONG
-#			bool "Strong"
-#			help
-#				Like Regular, but also protects functions with
-#				local arrays or references to local frame addresses.
-#		config PKG_CC_STACKPROTECTOR_ALL
-#			bool "All"
-#			help
-#				Protects all functions.
-#	endchoice
+# Entware specific -> PKG_CC_STACKPROTECTOR_NONE && KERNEL_CC_STACKPROTECTOR_NONE by default
+	choice
+		prompt "User space Stack-Smashing Protection"
+		default PKG_CC_STACKPROTECTOR_NONE
+		help
+		  Enable GCC Stack Smashing Protection (SSP) for userspace applications
+		config PKG_CC_STACKPROTECTOR_NONE
+			bool "None"
+			help
+				No stack smashing protection.
+		config PKG_CC_STACKPROTECTOR_REGULAR
+			bool "Regular"
+			help
+				Protects functions with vulnerable objects.
+				This includes functions with buffers larger than 8 bytes or calls to alloca.
+		config PKG_CC_STACKPROTECTOR_STRONG
+			bool "Strong"
+			help
+				Like Regular, but also protects functions with
+				local arrays or references to local frame addresses.
+		config PKG_CC_STACKPROTECTOR_ALL
+			bool "All"
+			help
+				Protects all functions.
+	endchoice
 
-#	choice
-#		prompt "Kernel space Stack-Smashing Protection"
-#		default KERNEL_CC_STACKPROTECTOR_REGULAR
-#		help
-#		  Enable GCC Stack-Smashing Protection (SSP) for the kernel
-#		config KERNEL_CC_STACKPROTECTOR_NONE
-#			bool "None"
-#			help
-#				No stack smashing protection.
-#		config KERNEL_CC_STACKPROTECTOR_REGULAR
-#			bool "Regular"
-#			help
-#				Protects functions with vulnerable objects.
-#				This includes functions with buffers larger than 8 bytes or calls to alloca.
-#		config KERNEL_CC_STACKPROTECTOR_STRONG
-#			bool "Strong"
-#			help
-#				Like Regular, but also protects functions with
-#				local arrays or references to local frame addresses.
-#	endchoice
+	choice
+		prompt "Kernel space Stack-Smashing Protection"
+		default KERNEL_CC_STACKPROTECTOR_NONE
+		help
+		  Enable GCC Stack-Smashing Protection (SSP) for the kernel
+		config KERNEL_CC_STACKPROTECTOR_NONE
+			bool "None"
+			help
+				No stack smashing protection.
+		config KERNEL_CC_STACKPROTECTOR_REGULAR
+			bool "Regular"
+			help
+				Protects functions with vulnerable objects.
+				This includes functions with buffers larger than 8 bytes or calls to alloca.
+		config KERNEL_CC_STACKPROTECTOR_STRONG
+			bool "Strong"
+			help
+				Like Regular, but also protects functions with
+				local arrays or references to local frame addresses.
+	endchoice
 
 	config KERNEL_STACKPROTECTOR
 		bool
@@ -361,9 +371,11 @@ menu "Global build settings"
 		config PKG_FORTIFY_SOURCE_NONE
 			bool "None"
 		config PKG_FORTIFY_SOURCE_1
-			bool "Conservative"
+			bool "Conservative Level 1"
 		config PKG_FORTIFY_SOURCE_2
-			bool "Aggressive"
+			bool "Aggressive Level 2"
+		config PKG_FORTIFY_SOURCE_3
+			bool "Aggressive Level 3"
 	endchoice
 
 	choice
@@ -384,59 +396,73 @@ menu "Global build settings"
 			bool "Full"
 	endchoice
 
+# Entware specifics: glibc supports it since vesion 2.36
+	config PKG_DT_RELR
+		bool "Link with relative relocations (RELR)"
+		depends on (aarch64 || i386 || loongarch64 || x86_64)
+		depends on !(LINUX_3_2||LINUX_3_4||LINUX_3_10)
+		default y
+		help
+		  Link all applications with -Wl,-z,pack-relative-relocs.
+		  This will reduce the size of many applications.
+		  This is only supported on a limited number of architectures.
+
 	config TARGET_ROOTFS_SECURITY_LABELS
 		bool
 		select KERNEL_SQUASHFS_XATTR
+		select KERNEL_EROFS_FS_SECURITY
 		select KERNEL_EXT4_FS_SECURITY
 		select KERNEL_F2FS_FS_SECURITY
 		select KERNEL_UBIFS_FS_SECURITY
 		select KERNEL_JFFS2_FS_SECURITY
 
 # Entware specific -> no SELINUX
-#	config SELINUX
-#		bool "Enable SELinux"
-#		select KERNEL_SECURITY_SELINUX
-#		select TARGET_ROOTFS_SECURITY_LABELS
-#		select PACKAGE_procd-selinux
-#		select PACKAGE_busybox-selinux
-#		help
-#		  This option enables SELinux kernel features, applies security labels
-#		  in squashfs rootfs and selects the selinux-variants of busybox and procd.
+	config SELINUX
+		bool "Enable SELinux"
+		select KERNEL_SECURITY_SELINUX
+		select TARGET_ROOTFS_SECURITY_LABELS
+		select PACKAGE_procd-selinux
+		select PACKAGE_busybox-selinux
+		depends on !(LINUX_3_2||LINUX_3_4||LINUX_3_10)
+		help
+		  This option enables SELinux kernel features, applies security labels
+		  in squashfs rootfs and selects the selinux-variants of busybox and procd.
 
-#		  Selecting this option results in about 0.5MiB of additional flash space
-#		  usage accounting for increased kernel and rootfs size.
+		  Selecting this option results in about 0.5MiB of additional flash space
+		  usage accounting for increased kernel and rootfs size.
 
-#	choice
-#		prompt "default SELinux type"
-#		depends on TARGET_ROOTFS_SECURITY_LABELS
-#		default SELINUXTYPE_dssp
-#		help
-#		  Select SELinux policy to be installed and used for applying rootfs labels.
+	choice
+		prompt "default SELinux type"
+		depends on TARGET_ROOTFS_SECURITY_LABELS
+		default SELINUXTYPE_dssp
+		help
+		  Select SELinux policy to be installed and used for applying rootfs labels.
 
-#		config SELINUXTYPE_targeted
-#			bool "targeted"
-#			select PACKAGE_refpolicy
-#			help
-#			  SELinux Reference Policy (refpolicy)
+		config SELINUXTYPE_targeted
+			bool "targeted"
+			select PACKAGE_refpolicy
+			help
+			  SELinux Reference Policy (refpolicy)
 
-#		config SELINUXTYPE_dssp
-#			bool "dssp"
-#			select PACKAGE_selinux-policy
-#			help
-#			  Defensec SELinux Security Policy -- OpenWrt edition
+		config SELINUXTYPE_dssp
+			bool "dssp"
+			select PACKAGE_selinux-policy
+			help
+			  Defensec SELinux Security Policy -- OpenWrt edition
 
-#	endchoice
+	endchoice
 
 # Entware specific -> no USE_SECCOMP
-#	config USE_SECCOMP
-#		bool "Enable SECCOMP"
-#		select KERNEL_SECCOMP
-#		depends on (aarch64 || arm || armeb || mips || mipsel || mips64 || mips64el || i386 || loongarch64 || powerpc || x86_64)
-#		depends on !TARGET_uml
-#		default y
-#		help
-#		  This option enables seccomp kernel features to safely
-#		  execute untrusted bytecode and selects the seccomp-variants
-#		  of procd
+	config USE_SECCOMP
+		bool "Enable SECCOMP"
+		select KERNEL_SECCOMP
+		depends on (aarch64 || arm || armeb || mips || mipsel || mips64 || mips64el || i386 || loongarch64 || powerpc || x86_64)
+		depends on !TARGET_uml
+		depends on !(LINUX_3_2||LINUX_3_4||LINUX_3_10)
+		default y
+		help
+		  This option enables seccomp kernel features to safely
+		  execute untrusted bytecode and selects the seccomp-variants
+		  of procd
 
 endmenu
