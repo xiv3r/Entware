@@ -4,6 +4,8 @@
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 #
+# XXX Entware specific: keep versions 2.23/2.27
+
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
@@ -20,10 +22,6 @@ endif
 
 ifeq ($(PKG_VERSION),2.27)
   PKG_HASH:=e49c919c83579984f7c2442243861d04227e8dc831a08d7bf60cdacfdcd08797
-endif
-
-ifeq ($(PKG_VERSION),2.33)
-  PKG_HASH:=4d7aa859d9152a4b243821eb604c0f1fee14c10d6341c2b9628d454cddd0f22e
 endif
 
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
@@ -77,7 +75,10 @@ GLIBC_CONFIGURE:= \
 		  $(if $(CONFIG_PKG_RELRO_FULL),--enable-bind-now) \
 		  $(if $(or $(CONFIG_GLIBC_USE_VERSION_2_23),\
 			    $(CONFIG_GLIBC_USE_VERSION_2_27)),--enable-obsolete-rpc) \
-		  $(if $(CONFIG_GLIBC_USE_VERSION_2_27),--enable-obsolete-nsl)
+		  $(if $(CONFIG_GLIBC_USE_VERSION_2_27),--enable-obsolete-nsl) \
+		  $(if $(CONFIG_PKG_FORTIFY_SOURCE_1),--enable-fortify-source=1) \
+		  $(if $(CONFIG_PKG_FORTIFY_SOURCE_2),--enable-fortify-source=2) \
+		  $(if $(CONFIG_PKG_FORTIFY_SOURCE_3),--enable-fortify-source=3)
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
